@@ -15,22 +15,18 @@ import type { NoteTag } from "@/types/note";
 
 type NotesProps = {
   tag?: NoteTag;
-  initialData: FetchNotesResponse;
 };
 
-function Notes({ tag, initialData }: NotesProps) {
+function Notes({ tag }: NotesProps) {
   const [query, setQuery] = useState("");
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [debouncedQuery] = useDebounce(query, 300);
 
-  const shouldUseInitialData = page === 1 && debouncedQuery === "";
-
   const { data } = useQuery<FetchNotesResponse>({
     queryKey: ["notes", debouncedQuery, page, tag],
     queryFn: () => fetchNotes(debouncedQuery, page, tag),
     placeholderData: keepPreviousData,
-    ...(shouldUseInitialData && { initialData }),
   });
 
   const handleSearch = (searchQuery: string) => {

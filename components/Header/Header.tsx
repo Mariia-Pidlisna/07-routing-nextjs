@@ -5,7 +5,7 @@ import TagsMenu from "../TagsMenu/TagsMenu";
 function Header() {
   return (
     <header className={css.header}>
-      <Link href="/" aria-label="Home">
+      <Link href="/" aria-label="Home" className={css.logo}>
         NoteHub
       </Link>
       <nav aria-label="Main Navigation">
@@ -14,7 +14,9 @@ function Header() {
             <Link href="/">Home</Link>
           </li>
           <li>
-            <TagsMenu />
+             <Link href="/notes/filter/all" className={css.menuLink}>
+                Notes
+             </Link>
           </li>
         </ul>
       </nav>

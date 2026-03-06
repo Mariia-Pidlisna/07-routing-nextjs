@@ -30,8 +30,6 @@ export async function fetchNotes(
 }
 
 
-  // console.log("Request params:", params);
-
   const response = await axios.get<FetchNotesResponse>(BASE_URL, {
     params,
     headers: {
