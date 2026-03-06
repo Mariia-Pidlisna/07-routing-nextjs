@@ -1,6 +1,6 @@
 
 import axios from "axios";
-import type { Note } from "../types/note";
+import type { Note, NoteTag  } from "../types/note";
 
 const API_KEY = process.env.NEXT_PUBLIC_NOTEHUB_TOKEN;
 const BASE_URL = "https://notehub-public.goit.study/api/notes";
@@ -10,18 +10,27 @@ export interface FetchNotesResponse {
   totalPages: number;
 }
 
+
 export async function fetchNotes(
   query: string,
-  page: number
+  page: number,
+  tag?: Exclude<NoteTag, "All">
 ): Promise<FetchNotesResponse> {
   const params: Record<string, string | number> = {
     page: page,
     perPage: 12,
   };
 
+ if (tag) {
+  params.tag = tag;
+}
+
   if (query.trim() !== "") {
-    params.search = query;
-  }
+  params.search = query;
+}
+
+
+  // console.log("Request params:", params);
 
   const response = await axios.get<FetchNotesResponse>(BASE_URL, {
     params,
@@ -31,6 +40,8 @@ export async function fetchNotes(
   });
   return response.data;
 }
+
+
 
 export async function createNote(
   params: Omit<Note, "id" | "createdAt" | "updatedAt">

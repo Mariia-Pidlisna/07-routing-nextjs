@@ -32,10 +32,10 @@ interface NoteFormValues {
 }
 
 interface NoteFormProps {
-  onCancel: () => void;
+  onClose: () => void;
 }
 
-function NoteForm({ onCancel }: NoteFormProps) {
+function NoteForm({ onClose }: NoteFormProps) {
   const queryClient = useQueryClient();
 
   const initialValues: NoteFormValues = {
@@ -49,7 +49,7 @@ function NoteForm({ onCancel }: NoteFormProps) {
     onSuccess: () => {
       toast.success("Note created successfully");
       queryClient.invalidateQueries({ queryKey: ["notes"] });
-      onCancel();
+      onClose();
     },
     onError: () => {
       toast.error("Failed to create note");
@@ -125,7 +125,7 @@ function NoteForm({ onCancel }: NoteFormProps) {
             <button
               type="button"
               className={css.cancelButton}
-              onClick={onCancel}
+              onClick={onClose}
             >
               Cancel
             </button>

@@ -1,18 +1,23 @@
 import css from "./Modal.module.css";
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
-import { useEffect, ReactNode } from "react";
 
-interface NoteModalProps {
-  onClose: () => void;
-  children: ReactNode; 
-}
+type Props = {
+  children: React.ReactNode;
+  onClose?: () => void;
+};
 
-function NoteModal({ onClose, children }: NoteModalProps) {
+const Modal = ({ children, onClose }: Props) => {
   useEffect(() => {
+    if (!onClose) return;
+
     const originalOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
+
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+      }
     };
     document.addEventListener("keydown", handleKeyDown);
     return () => {
@@ -22,17 +27,34 @@ function NoteModal({ onClose, children }: NoteModalProps) {
   }, [onClose]);
 
   const handleBackdropClick = (e: React.MouseEvent<HTMLDivElement>) => {
-    if (e.target === e.currentTarget) onClose();
+    if (onClose && e.target === e.currentTarget) {
+      onClose();
+    }
   };
 
   return createPortal(
-    <div className={css.backdrop} onClick={handleBackdropClick} role="dialog" aria-modal="true">
+    <div
+      className={css.backdrop}
+      onClick={handleBackdropClick}
+      role="dialog"
+      aria-modal="true"
+    >
       <div className={css.modal}>
-        {children} 
+        {onClose && (
+          <button
+            type="button"
+            className={css.backBtn}
+            onClick={onClose}
+            aria-label="Close modal"
+          >
+            x
+          </button>
+        )}
+        {children}
       </div>
     </div>,
     document.body
   );
-}
+};
 
-export default NoteModal;
+export default Modal;
